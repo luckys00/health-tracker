@@ -1,33 +1,73 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { db } from '../firebase.js';
+import { collection, addDoc, query, orderBy, onSnapshot } from 'firebase/firestore';
 
 export default function WorkoutLogger() {
-  const [workouts, setWorkouts] = useState([
-    { id: 1, type: 'Deadlift', category: 'Heavy Lift', sets: 3, reps: 5, weight: 140, notes: 'Felt strong, working on hip drive.', time: 'Today, 08:30 AM' },
-    { id: 2, type: 'Bench Press', category: 'Strength', sets: 4, reps: 8, weight: 85, notes: 'Focus on clean leg drive and bar path.', time: 'Today, 09:15 AM' },
-    { id: 3, type: 'Overhead Press', category: 'Strength', sets: 3, reps: 6, weight: 55, notes: 'Core stability felt solid.', time: 'Yesterday, 07:45 AM' },
-  ]);
-
+  const [workouts, setWorkouts] = useState([]);
   const [type, setType] = useState('Deadlift');
   const [sets, setSets] = useState(3);
   const [reps, setReps] = useState(5);
   const [weight, setWeight] = useState(140);
   const [notes, setNotes] = useState('');
+  const [success, setSuccess] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  const handleAddWorkout = (e) => {
+  // Sync workouts from Firestore in real-time
+  useEffect(() => {
+    const workoutsCollection = collection(db, 'workouts');
+    const q = query(workoutsCollection, orderBy('createdAt', 'desc'));
+    
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const logs = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      setWorkouts(logs);
+      setLoading(false);
+    }, (error) => {
+      console.error("Error fetching workouts from Firestore:", error);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const handleAddWorkout = async (e) => {
     e.preventDefault();
     if (!type || !sets || !reps || !weight) return;
-    const newLog = {
-      id: Date.now(),
-      type,
-      category: weight >= 100 ? 'Heavy Lift' : 'Strength',
-      sets: Number(sets),
-      reps: Number(reps),
-      weight: Number(weight),
-      notes: notes || 'No extra notes.',
-      time: 'Just now',
-    };
-    setWorkouts([newLog, ...workouts]);
-    setNotes('');
+
+    try {
+      const newLog = {
+        type,
+        category: Number(weight) >= 100 ? 'Heavy Lift' : 'Strength',
+        sets: Number(sets),
+        reps: Number(reps),
+        weight: Number(weight),
+        notes: notes || 'No extra notes.',
+        createdAt: new Date().toISOString(),
+      };
+
+      await addDoc(collection(db, 'workouts'), newLog);
+      
+      // Clear form
+      setNotes('');
+      // Show success message
+      setSuccess(true);
+      setTimeout(() => setSuccess(false), 3000);
+    } catch (error) {
+      console.error("Error saving workout to Firestore:", error);
+    }
+  };
+
+  // Helper to format timestamps nicely
+  const formatTime = (isoString) => {
+    if (!isoString) return 'Just now';
+    try {
+      const date = new Date(isoString);
+      return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ', ' + date.toLocaleDateString([], { month: 'short', day: 'numeric' });
+    } catch (e) {
+      return 'Just now';
+    }
   };
 
   return (
@@ -42,6 +82,16 @@ export default function WorkoutLogger() {
           </span>
           Log Exercise
         </h3>
+
+        {/* Success Alert Banner */}
+        {success && (
+          <div className="bg-emerald-50 border border-emerald-100 text-emerald-700 px-4 py-3 rounded-2xl text-sm font-semibold flex items-center gap-2 mb-4 animate-bounce">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+              <path fillRule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.748-5.25z" clipRule="evenodd" />
+            </svg>
+            Workout Saved!
+          </div>
+        )}
         
         <form onSubmit={handleAddWorkout} className="space-y-4">
           <div>
@@ -116,48 +166,65 @@ export default function WorkoutLogger() {
       {/* Workout History */}
       <div className="lg:col-span-2 space-y-6">
         <div className="flex items-center justify-between">
-          <h3 className="text-xl font-bold text-slate-900">Today's Lift Summary</h3>
-          <span className="text-xs bg-indigo-50 text-indigo-600 font-semibold px-3 py-1 rounded-full">Strength Focus</span>
+          <h3 className="text-xl font-bold text-slate-900">Logged Lifts History</h3>
+          <span className="text-xs bg-indigo-50 text-indigo-600 font-semibold px-3 py-1 rounded-full">Sync Active (Cloud)</span>
         </div>
 
-        <div className="space-y-4">
-          {workouts.map((w) => (
-            <div key={w.id} className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm hover:shadow-md transition-all flex flex-col md:flex-row md:items-center justify-between gap-4">
-              <div className="flex items-start gap-4">
-                <span className={`p-3 rounded-2xl ${w.category === 'Heavy Lift' ? 'bg-rose-50 text-rose-600' : 'bg-indigo-50 text-indigo-600'}`}>
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" className="w-6 h-6">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.048 8.287 8.287 0 009 9.6a8.983 8.983 0 013.361-6.867 8.21 8.21 0 003 2.48z" />
-                  </svg>
-                </span>
-                <div>
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <h4 className="text-slate-900 font-bold text-lg">{w.type}</h4>
-                    <span className={`text-xs px-2.5 py-0.5 rounded-full font-semibold ${w.category === 'Heavy Lift' ? 'bg-rose-50 text-rose-600' : 'bg-indigo-50 text-indigo-600'}`}>
-                      {w.category}
-                    </span>
+        {loading ? (
+          <div className="text-center py-10">
+            <div className="w-8 h-8 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
+            <p className="text-slate-400 text-sm">Loading lifts from Firestore...</p>
+          </div>
+        ) : workouts.length === 0 ? (
+          <div className="bg-slate-50 border border-slate-100 rounded-3xl p-10 text-center">
+            <span className="p-3 bg-white rounded-2xl shadow-sm text-slate-400 inline-block mb-3">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" className="w-6 h-6 mx-auto">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.048 8.287 8.287 0 009 9.6a8.983 8.983 0 013.361-6.867 8.21 8.21 0 003 2.48z" />
+              </svg>
+            </span>
+            <p className="text-slate-500 font-medium">No workouts logged yet</p>
+            <p className="text-slate-400 text-xs mt-1">Use the form on the left to save your first lift (e.g. 140kg Deadlift) to the cloud.</p>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {workouts.map((w) => (
+              <div key={w.id} className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm hover:shadow-md transition-all flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div className="flex items-start gap-4">
+                  <span className={`p-3 rounded-2xl ${w.category === 'Heavy Lift' ? 'bg-rose-50 text-rose-600' : 'bg-indigo-50 text-indigo-600'}`}>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" className="w-6 h-6">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.048 8.287 8.287 0 009 9.6a8.983 8.983 0 013.361-6.867 8.21 8.21 0 003 2.48z" />
+                    </svg>
+                  </span>
+                  <div>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <h4 className="text-slate-900 font-bold text-lg">{w.type}</h4>
+                      <span className={`text-xs px-2.5 py-0.5 rounded-full font-semibold ${w.category === 'Heavy Lift' ? 'bg-rose-50 text-rose-600' : 'bg-indigo-50 text-indigo-600'}`}>
+                        {w.category}
+                      </span>
+                    </div>
+                    <p className="text-slate-500 text-sm mt-1">{w.notes}</p>
+                    <span className="text-slate-400 text-xs block mt-2">{formatTime(w.createdAt)}</span>
                   </div>
-                  <p className="text-slate-500 text-sm mt-1">{w.notes}</p>
-                  <span className="text-slate-400 text-xs block mt-2">{w.time}</span>
                 </div>
-              </div>
 
-              <div className="flex items-center gap-4 bg-slate-50 px-5 py-3 rounded-2xl w-fit self-end md:self-center">
-                <div className="text-center border-r border-slate-200 pr-4">
-                  <span className="block text-xs text-slate-400 font-medium">Sets</span>
-                  <span className="text-slate-800 font-extrabold text-base">{w.sets}</span>
-                </div>
-                <div className="text-center border-r border-slate-200 pr-4">
-                  <span className="block text-xs text-slate-400 font-medium">Reps</span>
-                  <span className="text-slate-800 font-extrabold text-base">{w.reps}</span>
-                </div>
-                <div className="text-center">
-                  <span className="block text-xs text-slate-400 font-medium">Weight</span>
-                  <span className="text-indigo-600 font-extrabold text-base">{w.weight}<span className="text-xs font-normal">kg</span></span>
+                <div className="flex items-center gap-4 bg-slate-50 px-5 py-3 rounded-2xl w-fit self-end md:self-center">
+                  <div className="text-center border-r border-slate-200 pr-4">
+                    <span className="block text-xs text-slate-400 font-medium">Sets</span>
+                    <span className="text-slate-800 font-extrabold text-base">{w.sets}</span>
+                  </div>
+                  <div className="text-center border-r border-slate-200 pr-4">
+                    <span className="block text-xs text-slate-400 font-medium">Reps</span>
+                    <span className="text-slate-800 font-extrabold text-base">{w.reps}</span>
+                  </div>
+                  <div className="text-center">
+                    <span className="block text-xs text-slate-400 font-medium">Weight</span>
+                    <span className="text-indigo-600 font-extrabold text-base">{w.weight}<span className="text-xs font-normal">kg</span></span>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
