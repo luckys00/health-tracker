@@ -4,7 +4,7 @@ import { collection, addDoc, onSnapshot, query, orderBy, doc, deleteDoc } from '
 
 export default function NutritionTracker() {
   const [meals, setMeals] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Controlled form inputs
   const [foodName, setFoodName] = useState('');
@@ -12,6 +12,7 @@ export default function NutritionTracker() {
   const [protein, setProtein] = useState('');
   const [mealType, setMealType] = useState('Breakfast');
   const [success, setSuccess] = useState(false);
+  const [error, setError] = useState('');
 
   const indianMealPresets = [
     { name: 'Paneer Bhurji & 2 Roti', calories: 450, protein: 22 },
@@ -33,10 +34,10 @@ export default function NutritionTracker() {
         ...doc.data()
       }));
       setMeals(logs);
-      setLoading(false);
-    }, (error) => {
-      console.error("Error listening to nutrition logs:", error);
-      setLoading(false);
+      setIsLoading(false);
+    }, (err) => {
+      console.error("Error listening to nutrition logs:", err);
+      setIsLoading(false);
     });
 
     return () => unsubscribe();
@@ -44,7 +45,15 @@ export default function NutritionTracker() {
 
   const handleAddMeal = async (e) => {
     e.preventDefault();
-    if (!foodName || !calories || !protein) return;
+
+    // Form validation
+    if (!foodName || calories === '' || calories === null || protein === '' || protein === null) {
+      setError('Error: Food item name, calories, and protein are required.');
+      setSuccess(false);
+      return;
+    }
+
+    setError('');
 
     try {
       const newMeal = {
@@ -57,25 +66,27 @@ export default function NutritionTracker() {
 
       await addDoc(collection(db, 'nutrition'), newMeal);
 
-      // Clear the form
+      // Clear the form and error state
       setFoodName('');
       setCalories('');
       setProtein('');
       setMealType('Breakfast');
+      setError('');
 
       // Show success message
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
-    } catch (error) {
-      console.error("Error saving meal to Firestore:", error);
+    } catch (err) {
+      console.error("Error saving meal to Firestore:", err);
+      setError('Error: Failed to save meal log to the cloud.');
     }
   };
 
   const handleDeleteMeal = async (id) => {
     try {
       await deleteDoc(doc(db, 'nutrition', id));
-    } catch (error) {
-      console.error("Error deleting meal from Firestore:", error);
+    } catch (err) {
+      console.error("Error deleting meal from Firestore:", err);
     }
   };
 
@@ -83,6 +94,7 @@ export default function NutritionTracker() {
     setFoodName(preset.name);
     setCalories(preset.calories);
     setProtein(preset.protein);
+    setError('');
   };
 
   // Calculations for total nutrition logs
@@ -113,6 +125,13 @@ export default function NutritionTracker() {
             Log Indian Meals
           </h3>
 
+          {/* Error Banner */}
+          {error && (
+            <div className="bg-rose-50 dark:bg-rose-950/30 border border-rose-100 dark:border-rose-900/50 text-rose-700 dark:text-rose-400 px-4 py-3 rounded-2xl text-sm font-semibold mb-4">
+              {error}
+            </div>
+          )}
+
           {/* Success Banner */}
           {success && (
             <div className="bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-100 dark:border-emerald-900/50 text-emerald-700 dark:text-emerald-400 px-4 py-3 rounded-2xl text-sm font-semibold flex items-center gap-2 mb-4 animate-bounce">
@@ -132,7 +151,6 @@ export default function NutritionTracker() {
                 value={foodName}
                 onChange={(e) => setFoodName(e.target.value)}
                 className="w-full px-4 py-2.5 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-2xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-colors"
-                required
               />
             </div>
 
@@ -146,7 +164,6 @@ export default function NutritionTracker() {
                   value={calories}
                   onChange={(e) => setCalories(e.target.value)}
                   className="w-full px-4 py-2.5 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-2xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-colors"
-                  required
                 />
               </div>
               <div>
@@ -158,7 +175,6 @@ export default function NutritionTracker() {
                   value={protein}
                   onChange={(e) => setProtein(e.target.value)}
                   className="w-full px-4 py-2.5 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-2xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-colors"
-                  required
                 />
               </div>
             </div>
@@ -225,8 +241,8 @@ export default function NutritionTracker() {
         <div className="space-y-4">
           <h4 className="font-bold text-slate-950 dark:text-white text-lg">Logged Meals History</h4>
 
-          {loading ? (
-            <div className="text-center py-10">
+          {isLoading ? (
+            <div className="text-center py-10 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800/80 rounded-3xl shadow-sm">
               <div className="w-8 h-8 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
               <p className="text-slate-400 dark:text-slate-500 text-sm">Loading logs from Firestore...</p>
             </div>
@@ -237,7 +253,7 @@ export default function NutritionTracker() {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </span>
-              <p className="text-slate-500 dark:text-slate-300 font-medium">No meals logged yet</p>
+              <p className="text-slate-500 dark:text-slate-300 font-semibold text-lg">No data logged yet</p>
               <p className="text-slate-400 dark:text-slate-500 text-xs mt-1">Select a preset or log your food to sync it with your cloud account.</p>
             </div>
           ) : (

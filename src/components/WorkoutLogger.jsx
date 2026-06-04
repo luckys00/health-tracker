@@ -10,7 +10,8 @@ export default function WorkoutLogger() {
   const [weight, setWeight] = useState(140);
   const [notes, setNotes] = useState('');
   const [success, setSuccess] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
 
   // Sync workouts from Firestore in real-time
   useEffect(() => {
@@ -23,10 +24,10 @@ export default function WorkoutLogger() {
         ...doc.data()
       }));
       setWorkouts(logs);
-      setLoading(false);
-    }, (error) => {
-      console.error("Error fetching workouts from Firestore:", error);
-      setLoading(false);
+      setIsLoading(false);
+    }, (err) => {
+      console.error("Error fetching workouts from Firestore:", err);
+      setIsLoading(false);
     });
 
     return () => unsubscribe();
@@ -34,7 +35,15 @@ export default function WorkoutLogger() {
 
   const handleAddWorkout = async (e) => {
     e.preventDefault();
-    if (!type || !sets || !reps || !weight) return;
+    
+    // Form validation
+    if (!type || !sets || !reps || weight === '' || weight === null || weight === undefined) {
+      setError('Error: Exercise name, sets, reps, and weight are required.');
+      setSuccess(false);
+      return;
+    }
+
+    setError('');
 
     try {
       const newLog = {
@@ -49,21 +58,23 @@ export default function WorkoutLogger() {
 
       await addDoc(collection(db, 'workouts'), newLog);
       
-      // Clear form
+      // Clear form & errors
       setNotes('');
+      setError('');
       // Show success message
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
-    } catch (error) {
-      console.error("Error saving workout to Firestore:", error);
+    } catch (err) {
+      console.error("Error saving workout to Firestore:", err);
+      setError('Error: Failed to save workout to the cloud.');
     }
   };
 
   const handleDeleteWorkout = async (id) => {
     try {
       await deleteDoc(doc(db, 'workouts', id));
-    } catch (error) {
-      console.error("Error deleting workout from Firestore:", error);
+    } catch (err) {
+      console.error("Error deleting workout from Firestore:", err);
     }
   };
 
@@ -90,6 +101,13 @@ export default function WorkoutLogger() {
           </span>
           Log Exercise
         </h3>
+
+        {/* Error Alert Banner */}
+        {error && (
+          <div className="bg-rose-50 dark:bg-rose-950/30 border border-rose-100 dark:border-rose-900/50 text-rose-700 dark:text-rose-400 px-4 py-3 rounded-2xl text-sm font-semibold mb-4">
+            {error}
+          </div>
+        )}
 
         {/* Success Alert Banner */}
         {success && (
@@ -178,8 +196,8 @@ export default function WorkoutLogger() {
           <span className="text-xs bg-indigo-50 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-400 font-semibold px-3 py-1 rounded-full">Sync Active (Cloud)</span>
         </div>
 
-        {loading ? (
-          <div className="text-center py-10">
+        {isLoading ? (
+          <div className="text-center py-10 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800/80 rounded-3xl shadow-sm">
             <div className="w-8 h-8 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
             <p className="text-slate-400 dark:text-slate-500 text-sm">Loading lifts from Firestore...</p>
           </div>
@@ -190,7 +208,7 @@ export default function WorkoutLogger() {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.048 8.287 8.287 0 009 9.6a8.983 8.983 0 013.361-6.867 8.21 8.21 0 003 2.48z" />
               </svg>
             </span>
-            <p className="text-slate-500 dark:text-slate-300 font-medium">No workouts logged yet</p>
+            <p className="text-slate-500 dark:text-slate-300 font-semibold text-lg">No data logged yet</p>
             <p className="text-slate-400 dark:text-slate-500 text-xs mt-1">Use the form on the left to save your first lift (e.g. 140kg Deadlift) to the cloud.</p>
           </div>
         ) : (
