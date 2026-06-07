@@ -62,12 +62,16 @@ function App() {
     }
   };
 
-  // Auth Loading State
+  // Auth Loading State (Sleek pulse layout)
   if (authLoading) {
     return (
-      <div className="min-h-screen bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 flex flex-col items-center justify-center transition-colors duration-300">
-        <div className="w-12 h-12 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mb-4"></div>
-        <p className="text-sm font-semibold text-slate-500 dark:text-slate-400">Loading your profile...</p>
+      <div className="min-h-screen bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 flex flex-col items-center justify-center transition-colors duration-500">
+        <div className="w-16 h-16 bg-gradient-to-tr from-indigo-500 via-violet-500 to-fuchsia-500 rounded-3xl shadow-xl shadow-indigo-200/50 dark:shadow-none animate-pulse flex items-center justify-center mb-6">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" className="w-8 h-8 text-white">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z" />
+          </svg>
+        </div>
+        <p className="text-sm font-bold tracking-widest uppercase text-slate-400 dark:text-slate-500">Initializing HealthTracker...</p>
       </div>
     );
   }
@@ -75,20 +79,19 @@ function App() {
   // Not Authenticated State
   if (!user) {
     return (
-      <div className="min-h-screen bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 flex flex-col justify-between transition-colors duration-300">
-        {/* Simple Header with Theme Switcher for Login screen */}
-        <header className="max-w-6xl w-full mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="p-2 bg-gradient-to-tr from-indigo-500 to-violet-500 rounded-xl text-white shadow-md">
+      <div className="min-h-screen bg-gradient-to-tr from-slate-50 via-white to-slate-100 dark:from-slate-950 dark:via-slate-950 dark:to-slate-900 text-slate-800 dark:text-slate-100 flex flex-col justify-between transition-colors duration-500">
+        <header className="max-w-6xl w-full mx-auto px-6 py-6 flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <span className="p-2.5 bg-gradient-to-tr from-indigo-500 via-violet-500 to-fuchsia-500 rounded-2xl text-white shadow-xl shadow-indigo-200/50 dark:shadow-none">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" className="w-5 h-5">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z" />
               </svg>
             </span>
-            <span className="font-extrabold text-lg tracking-tight bg-gradient-to-r from-slate-900 to-slate-700 dark:from-white dark:to-slate-300 bg-clip-text text-transparent">HealthTracker</span>
+            <span className="font-extrabold text-xl tracking-tight bg-gradient-to-r from-slate-900 to-slate-700 dark:from-white dark:to-slate-300 bg-clip-text text-transparent">HealthTracker</span>
           </div>
           <button
             onClick={toggleTheme}
-            className="p-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-2xl transition-all duration-200"
+            className="p-3 bg-white hover:bg-slate-50 dark:bg-slate-900 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-100 dark:border-slate-800 rounded-2xl shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300"
             aria-label="Toggle theme"
           >
             {theme === 'light' ? (
@@ -107,66 +110,66 @@ function App() {
           <Auth />
         </main>
 
-        <footer className="border-t border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 py-6 text-center text-xs text-slate-400 dark:text-slate-500">
+        <footer className="border-t border-slate-100 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 py-8 text-center text-xs font-semibold text-slate-400 dark:text-slate-500">
           <p>© {new Date().getFullYear()} HealthTracker App. All rights reserved.</p>
         </footer>
       </div>
     );
   }
 
-  // Authenticated Main Application State
+  // Authenticated Main Application State (Overhauled, Premium theme styles)
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 antialiased font-sans flex flex-col justify-between transition-colors duration-300">
+    <div className="min-h-screen bg-slate-50/50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 antialiased font-sans flex flex-col justify-between transition-colors duration-500">
       <div>
         {/* Top Navbar */}
-        <nav className="bg-white/80 dark:bg-slate-900/85 backdrop-blur-md sticky top-0 z-50 border-b border-slate-100 dark:border-slate-800/80 transition-colors duration-300">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 sm:py-0 sm:h-16 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <nav className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-lg sticky top-0 z-50 border-b border-slate-100 dark:border-slate-900 transition-colors duration-500 py-2 sm:py-0">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 sm:py-0 sm:h-20 flex flex-col sm:flex-row items-center justify-between gap-4">
             
             {/* Logo Home Button */}
             <button
               onClick={() => setActiveTab('dashboard')}
-              className="flex items-center gap-2 focus:outline-none hover:opacity-90 active:scale-95 transition-all text-left"
+              className="flex items-center gap-2.5 focus:outline-none hover:opacity-90 active:scale-95 hover:-translate-y-0.5 transition-all text-left group"
             >
-              <span className="p-2 bg-gradient-to-tr from-indigo-500 to-violet-500 rounded-xl text-white shadow-md shadow-indigo-200 dark:shadow-none">
+              <span className="p-3 bg-gradient-to-tr from-indigo-500 via-violet-500 to-fuchsia-500 rounded-2xl text-white shadow-lg shadow-indigo-200/50 dark:shadow-none transition-transform group-hover:scale-105">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" className="w-5 h-5">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z" />
                 </svg>
               </span>
-              <span className="font-extrabold text-lg tracking-tight bg-gradient-to-r from-slate-900 to-slate-700 dark:from-white dark:to-slate-300 bg-clip-text text-transparent">
+              <span className="font-black text-xl sm:text-2xl tracking-tight bg-gradient-to-r from-slate-900 to-slate-700 dark:from-white dark:to-slate-200 bg-clip-text text-transparent">
                 HealthTracker
               </span>
             </button>
 
             {/* Navigation and Actions */}
-            <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
+            <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto justify-between sm:justify-end">
               {/* Tab Navigation */}
-              <div className="flex gap-1 bg-slate-100/80 dark:bg-slate-800 p-1 rounded-2xl w-full sm:w-auto justify-center">
+              <div className="flex gap-1.5 bg-slate-100 dark:bg-slate-900 p-1.5 rounded-[1.25rem] w-full sm:w-auto justify-center border border-slate-200/20 dark:border-slate-800/20">
                 <button
                   onClick={() => setActiveTab('dashboard')}
-                  className={`flex-1 sm:flex-none px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 ${
+                  className={`flex-1 sm:flex-none px-4 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold transition-all duration-300 ${
                     activeTab === 'dashboard'
-                      ? 'bg-white dark:bg-slate-700 text-indigo-600 dark:text-white shadow-sm'
-                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                      ? 'bg-white dark:bg-slate-800 text-indigo-600 dark:text-white shadow-sm'
+                      : 'text-slate-500 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white'
                   }`}
                 >
                   Dashboard
                 </button>
                 <button
                   onClick={() => setActiveTab('workout')}
-                  className={`flex-1 sm:flex-none px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 ${
+                  className={`flex-1 sm:flex-none px-4 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold transition-all duration-300 ${
                     activeTab === 'workout'
-                      ? 'bg-white dark:bg-slate-700 text-indigo-600 dark:text-white shadow-sm'
-                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                      ? 'bg-white dark:bg-slate-800 text-indigo-600 dark:text-white shadow-sm'
+                      : 'text-slate-500 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white'
                   }`}
                 >
                   Workouts
                 </button>
                 <button
                   onClick={() => setActiveTab('nutrition')}
-                  className={`flex-1 sm:flex-none px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 ${
+                  className={`flex-1 sm:flex-none px-4 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold transition-all duration-300 ${
                     activeTab === 'nutrition'
-                      ? 'bg-white dark:bg-slate-700 text-indigo-600 dark:text-white shadow-sm'
-                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                      ? 'bg-white dark:bg-slate-800 text-indigo-600 dark:text-white shadow-sm'
+                      : 'text-slate-500 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white'
                   }`}
                 >
                   Nutrition
@@ -174,11 +177,11 @@ function App() {
               </div>
 
               {/* Utility buttons */}
-              <div className="flex items-center gap-2 self-end sm:self-auto">
+              <div className="flex items-center gap-2.5 self-end sm:self-auto">
                 {/* Theme Toggle */}
                 <button
                   onClick={toggleTheme}
-                  className="p-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-2xl transition-all duration-200"
+                  className="p-3 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-100 dark:border-slate-800 rounded-2xl shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300"
                   aria-label="Toggle theme"
                 >
                   {theme === 'light' ? (
@@ -195,7 +198,7 @@ function App() {
                 {/* Logout Button */}
                 <button
                   onClick={handleLogout}
-                  className="p-2.5 text-slate-500 hover:text-rose-600 dark:text-slate-400 dark:hover:text-rose-400 bg-slate-100 hover:bg-rose-50 dark:bg-slate-800 dark:hover:bg-rose-950/20 rounded-2xl transition-all duration-200 flex items-center justify-center"
+                  className="p-3 text-slate-500 hover:text-rose-600 dark:text-slate-400 dark:hover:text-rose-400 bg-white dark:bg-slate-900 hover:bg-rose-50 dark:hover:bg-rose-950/20 border border-slate-100 dark:border-slate-800 rounded-2xl shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 flex items-center justify-center"
                   title="Sign Out"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" className="w-5 h-5">
@@ -209,16 +212,16 @@ function App() {
         </nav>
 
         {/* Main Content Area */}
-        <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
+        <main className="max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
           {renderComponent()}
         </main>
       </div>
 
       {/* Footer */}
-      <footer className="border-t border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 py-8 transition-colors duration-300">
-        <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-slate-400 dark:text-slate-500">
+      <footer className="border-t border-slate-100 dark:border-slate-900 bg-white dark:bg-slate-900 py-10 transition-colors duration-500">
+        <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4 text-sm font-semibold text-slate-400 dark:text-slate-500">
           <p>© {new Date().getFullYear()} HealthTracker App. All rights reserved.</p>
-          <div className="flex gap-4">
+          <div className="flex gap-6">
             <a href="#" className="hover:text-slate-600 dark:hover:text-slate-300 transition-colors">Privacy Policy</a>
             <a href="#" className="hover:text-slate-600 dark:hover:text-slate-300 transition-colors">Terms of Service</a>
           </div>

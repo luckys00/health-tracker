@@ -112,12 +112,12 @@ export default function NutritionTracker() {
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-fade-in">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 sm:gap-12 animate-fade-in">
       {/* Logger Form */}
-      <div className="lg:col-span-1 space-y-6">
-        <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800/80 rounded-3xl p-6 shadow-sm h-fit transition-colors">
-          <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
-            <span className="p-2 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 rounded-xl">
+      <div className="lg:col-span-1 space-y-8">
+        <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800/80 rounded-[2rem] p-8 shadow-lg h-fit transition-all duration-300">
+          <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-8 flex items-center gap-3">
+            <span className="p-2.5 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 rounded-2xl shadow-sm">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" className="w-5 h-5">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
@@ -127,14 +127,14 @@ export default function NutritionTracker() {
 
           {/* Error Banner */}
           {error && (
-            <div className="bg-rose-50 dark:bg-rose-950/30 border border-rose-100 dark:border-rose-900/50 text-rose-700 dark:text-rose-400 px-4 py-3 rounded-2xl text-sm font-semibold mb-4">
+            <div className="bg-rose-50 dark:bg-rose-950/20 border border-rose-100 dark:border-rose-900/40 text-rose-700 dark:text-rose-400 px-5 py-3.5 rounded-2xl text-sm font-semibold mb-6 transition-all duration-300">
               {error}
             </div>
           )}
 
           {/* Success Banner */}
           {success && (
-            <div className="bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-100 dark:border-emerald-900/50 text-emerald-700 dark:text-emerald-400 px-4 py-3 rounded-2xl text-sm font-semibold flex items-center gap-2 mb-4 animate-bounce">
+            <div className="bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-900/40 text-emerald-700 dark:text-emerald-400 px-5 py-3.5 rounded-2xl text-sm font-semibold flex items-center gap-2.5 mb-6 animate-bounce">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
                 <path fillRule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.748-5.25z" clipRule="evenodd" />
               </svg>
@@ -142,49 +142,49 @@ export default function NutritionTracker() {
             </div>
           )}
 
-          <form onSubmit={handleAddMeal} className="space-y-4">
+          <form onSubmit={handleAddMeal} className="space-y-6">
             <div>
-              <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Food Item Name</label>
+              <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Food Item Name</label>
               <input 
                 type="text" 
                 placeholder="e.g. Masala Dosa" 
                 value={foodName}
                 onChange={(e) => setFoodName(e.target.value)}
-                className="w-full px-4 py-2.5 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-2xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-colors"
+                className="w-full px-4 py-3 border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 text-slate-900 dark:text-white rounded-2xl focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all duration-300 placeholder-slate-400"
               />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Calories (kcal)</label>
+                <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Calories (kcal)</label>
                 <input 
                   type="number" 
                   min="0"
                   placeholder="kcal"
                   value={calories}
                   onChange={(e) => setCalories(e.target.value)}
-                  className="w-full px-4 py-2.5 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-2xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-colors"
+                  className="w-full px-4 py-3 border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 text-slate-900 dark:text-white rounded-2xl focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all duration-300 placeholder-slate-400"
                 />
               </div>
               <div>
-                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Protein (g)</label>
+                <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Protein (g)</label>
                 <input 
                   type="number" 
                   min="0"
                   placeholder="grams"
                   value={protein}
                   onChange={(e) => setProtein(e.target.value)}
-                  className="w-full px-4 py-2.5 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-2xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-colors"
+                  className="w-full px-4 py-3 border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 text-slate-900 dark:text-white rounded-2xl focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all duration-300 placeholder-slate-400"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Meal Timing</label>
+              <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Meal Timing</label>
               <select 
                 value={mealType} 
                 onChange={(e) => setMealType(e.target.value)}
-                className="w-full px-4 py-2.5 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-2xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-colors"
+                className="w-full px-4 py-3 border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 text-slate-900 dark:text-white rounded-2xl focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all duration-300"
               >
                 <option value="Breakfast">Breakfast</option>
                 <option value="Lunch">Lunch</option>
@@ -195,7 +195,7 @@ export default function NutritionTracker() {
 
             <button 
               type="submit" 
-              className="w-full bg-emerald-600 text-white font-semibold py-3 rounded-2xl hover:bg-emerald-700 transition-colors shadow-md shadow-emerald-100 dark:shadow-none"
+              className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold py-4 rounded-2xl shadow-xl shadow-emerald-100 dark:shadow-none hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300"
             >
               Add to Log
             </button>
@@ -203,15 +203,15 @@ export default function NutritionTracker() {
         </div>
 
         {/* Quick Indian Presets Helper */}
-        <div className="bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800/80 rounded-3xl p-5 shadow-sm transition-colors">
-          <h4 className="text-sm font-bold text-slate-800 dark:text-slate-300 mb-3">Popular Presets (Click to autofill)</h4>
-          <div className="flex flex-wrap gap-2">
+        <div className="bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800/80 rounded-[2rem] p-6 shadow-sm transition-all duration-300">
+          <h4 className="text-sm font-bold text-slate-800 dark:text-slate-300 mb-4 uppercase tracking-widest text-xs">Popular Presets (Autofill)</h4>
+          <div className="flex flex-wrap gap-2.5">
             {indianMealPresets.map((p, idx) => (
               <button
                 key={idx}
                 type="button"
                 onClick={() => handlePresetClick(p)}
-                className="text-xs bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-semibold px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 transition-colors"
+                className="text-xs bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold px-3.5 py-2.5 rounded-xl border border-slate-200/60 dark:border-slate-700/60 hover:-translate-y-0.5 transition-all duration-300 shadow-sm"
               >
                 {p.name}
               </button>
@@ -221,68 +221,68 @@ export default function NutritionTracker() {
       </div>
 
       {/* Summary and Meal List */}
-      <div className="lg:col-span-2 space-y-6">
+      <div className="lg:col-span-2 space-y-8">
         {/* Macros Breakdown */}
-        <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800/80 rounded-3xl p-6 shadow-sm transition-colors">
-          <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4">Nutritional Summary (Today)</h3>
-          <div className="grid grid-cols-2 gap-4 text-center">
-            <div className="bg-emerald-50/50 dark:bg-emerald-950/30 p-4 rounded-2xl">
-              <span className="block text-xs text-slate-500 dark:text-slate-400 font-semibold mb-1">Calories Intake</span>
-              <span className="text-emerald-700 dark:text-emerald-400 font-black text-2xl">{totalCalories} <span className="text-xs font-normal">kcal</span></span>
+        <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800/80 rounded-[2rem] p-8 shadow-lg transition-colors">
+          <h3 className="text-xl font-black text-slate-900 dark:text-white mb-6">Nutritional Summary (Today)</h3>
+          <div className="grid grid-cols-2 gap-6 text-center">
+            <div className="bg-emerald-50/50 dark:bg-emerald-950/30 p-6 rounded-3xl border border-emerald-100/10">
+              <span className="block text-xs text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider mb-1">Calories Intake</span>
+              <span className="text-emerald-700 dark:text-emerald-400 font-black text-3xl">{totalCalories} <span className="text-sm font-normal">kcal</span></span>
             </div>
-            <div className="bg-blue-50/50 dark:bg-blue-950/30 p-4 rounded-2xl">
-              <span className="block text-xs text-slate-500 dark:text-slate-400 font-semibold mb-1">Protein Intake</span>
-              <span className="text-blue-700 dark:text-blue-400 font-black text-2xl">{totalProtein} <span className="text-xs font-normal">g</span></span>
+            <div className="bg-blue-50/50 dark:bg-blue-950/30 p-6 rounded-3xl border border-blue-100/10">
+              <span className="block text-xs text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider mb-1">Protein Intake</span>
+              <span className="text-blue-700 dark:text-blue-400 font-black text-3xl">{totalProtein} <span className="text-sm font-normal">g</span></span>
             </div>
           </div>
         </div>
 
         {/* Meal Logs */}
         <div className="space-y-4">
-          <h4 className="font-bold text-slate-950 dark:text-white text-lg">Logged Meals History</h4>
+          <h4 className="font-bold text-slate-950 dark:text-white text-xl">Logged Meals History</h4>
 
           {isLoading ? (
-            <div className="text-center py-10 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800/80 rounded-3xl shadow-sm">
-              <div className="w-8 h-8 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
-              <p className="text-slate-400 dark:text-slate-500 text-sm">Loading logs from Firestore...</p>
+            <div className="text-center py-20 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800/80 rounded-[2rem] shadow-lg">
+              <div className="w-8 h-8 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+              <p className="text-slate-400 dark:text-slate-500 text-sm font-bold tracking-wider uppercase">Loading cloud logs...</p>
             </div>
           ) : meals.length === 0 ? (
-            <div className="bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800/80 rounded-3xl p-10 text-center transition-colors">
-              <span className="p-3 bg-white dark:bg-slate-800 rounded-2xl shadow-sm text-slate-400 inline-block mb-3">
+            <div className="bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800/80 rounded-[2rem] p-12 text-center transition-colors">
+              <span className="p-4 bg-white dark:bg-slate-900 rounded-2xl shadow-md text-slate-400 inline-block mb-4">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" className="w-6 h-6 mx-auto">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </span>
-              <p className="text-slate-500 dark:text-slate-300 font-semibold text-lg">No data logged yet</p>
-              <p className="text-slate-400 dark:text-slate-500 text-xs mt-1">Select a preset or log your food to sync it with your cloud account.</p>
+              <p className="text-slate-500 dark:text-slate-300 font-bold text-xl">No data logged yet</p>
+              <p className="text-slate-400 dark:text-slate-500 text-sm mt-2 max-w-sm mx-auto leading-relaxed">Select a popular preset or type your meal to sync it with your cloud account.</p>
             </div>
           ) : (
-            <div className="space-y-3">
+            <div className="space-y-4">
               {meals.map((m) => (
-                <div key={m.id} className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800/80 rounded-3xl p-5 shadow-sm hover:shadow-md transition-all flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div key={m.id} className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800/80 rounded-[2rem] p-6 shadow-md hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 flex flex-col md:flex-row md:items-center justify-between gap-6">
                   <div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-950/30 px-2 py-0.5 rounded-full">{m.mealType}</span>
-                      <h4 className="text-slate-900 dark:text-white font-bold">{m.name}</h4>
+                    <div className="flex items-center gap-2.5">
+                      <span className="text-xs font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-950/30 px-3 py-1 rounded-full">{m.mealType}</span>
+                      <h4 className="text-slate-900 dark:text-white font-extrabold text-lg">{m.name}</h4>
                     </div>
-                    <span className="text-slate-400 dark:text-slate-500 text-xs block mt-1">{formatTime(m.createdAt)}</span>
+                    <span className="text-slate-400 dark:text-slate-500 text-xs block mt-2 font-semibold">{formatTime(m.createdAt)}</span>
                   </div>
-                  <div className="flex items-center justify-between md:justify-end gap-4 w-full md:w-auto">
-                    <div className="flex items-center gap-6 bg-slate-50 dark:bg-slate-800/40 px-5 py-3 rounded-2xl w-fit">
+                  <div className="flex items-center justify-between md:justify-end gap-6 w-full md:w-auto border-t md:border-t-0 pt-4 md:pt-0 border-slate-100 dark:border-slate-800">
+                    <div className="flex items-center gap-6 bg-slate-50 dark:bg-slate-800/40 px-6 py-4.5 rounded-2xl w-fit">
                       <div className="text-center border-r border-slate-200 dark:border-slate-700 pr-5">
-                        <span className="block text-[10px] text-slate-400 dark:text-slate-500 uppercase font-bold tracking-wider">Protein</span>
-                        <span className="text-slate-700 dark:text-slate-200 font-extrabold text-sm">{m.protein}g</span>
+                        <span className="block text-[10px] text-slate-400 dark:text-slate-500 uppercase font-bold tracking-wider mb-0.5">Protein</span>
+                        <span className="text-slate-700 dark:text-slate-200 font-black text-base">{m.protein}g</span>
                       </div>
                       <div className="text-center">
-                        <span className="block text-[10px] text-emerald-600 dark:text-emerald-400 uppercase font-bold tracking-wider">Calories</span>
-                        <span className="text-emerald-700 dark:text-emerald-400 font-extrabold text-sm">{m.calories} <span className="text-[10px] font-normal">kcal</span></span>
+                        <span className="block text-[10px] text-emerald-600 dark:text-emerald-400 uppercase font-bold tracking-wider mb-0.5">Calories</span>
+                        <span className="text-emerald-700 dark:text-emerald-400 font-black text-base">{m.calories} <span className="text-[10px] font-normal">kcal</span></span>
                       </div>
                     </div>
 
                     {/* Delete Button */}
                     <button
                       onClick={() => handleDeleteMeal(m.id)}
-                      className="p-2.5 text-slate-400 dark:text-slate-500 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/20 rounded-xl transition-all"
+                      className="p-3 text-slate-400 dark:text-slate-500 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/20 rounded-2xl transition-all duration-300 hover:scale-105 active:scale-95"
                       aria-label="Delete meal log"
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" className="w-5 h-5">
